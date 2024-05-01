@@ -1,9 +1,9 @@
 #!/bin/bash
 # Ensure all environment variables are properly configured.
-: "${KAFKA_HOME=/kafka_2.12-2.5.0}"
+: "${KAFKA_HOME=/kafka_2.13-3.7.0}"
 : "${KEY_STORE=$KAFKA_HOME/ssl/server.keystore.jks}"
-: "${DOMAIN=www.mywebsite.com}"
-: "${PASSWORD=abc123def}"
+: "${DOMAIN=test.kafka.top}"
+: "${PASSWORD=password}"
 
 echo -e "KAFKA_HOME=$KAFKA_HOME\n\
 KEY_STORE=$KEY_STORE\n\
@@ -18,11 +18,11 @@ if [[ ! -f ${KEY_STORE} ]]; then
     mkdir -p ${KAFKA_HOME}/ssl/
     cd ${KAFKA_HOME}/ssl/ || exitWithError "KAFKA_HOME/ssl directory does not exist"
 
-    keytool -keystore server.keystore.jks -alias $DOMAIN -validity 365 -genkey -keyalg RSA -dname "CN=$DOMAIN, OU=orgunit, O=Organisation, L=bangalore, S=Karnataka, C=IN" -ext SAN=DNS:$DOMAIN -keypass $PASSWORD -storepass $PASSWORD && \
-    openssl req -new -x509 -keyout ca-key -out ca-cert -days 365 -passout pass:"$PASSWORD" -subj "/CN=$DOMAIN" && \
+    keytool -keystore server.keystore.jks -alias $DOMAIN -validity 3650 -genkey -keyalg RSA -dname "CN=$DOMAIN, OU=orgunit, O=OpenResty, L=FuJian, S=Xiamen, C=CN" -ext SAN=DNS:$DOMAIN -keypass $PASSWORD -storepass $PASSWORD && \
+    openssl req -new -x509 -keyout ca-key -out ca-cert -days 3650 -passout pass:"$PASSWORD" -subj "/CN=$DOMAIN" && \
     keytool -keystore server.keystore.jks -alias CARoot -import -file ca-cert -storepass $PASSWORD -noprompt && \
     keytool -keystore server.keystore.jks -alias $DOMAIN -certreq -file cert-file -storepass $PASSWORD && \
-    openssl x509 -req -CA ca-cert -CAkey ca-key -in cert-file -out cert-signed -days 365 -CAcreateserial -passin pass:$PASSWORD && \
+    openssl x509 -req -CA ca-cert -CAkey ca-key -in cert-file -out cert-signed -days 3650 -CAcreateserial -passin pass:$PASSWORD && \
     keytool -keystore server.keystore.jks -alias $DOMAIN -import -file cert-signed -storepass $PASSWORD
     echo "generated keystore file is ${KEY_STORE}"
     cd /
