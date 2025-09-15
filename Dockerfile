@@ -4,8 +4,8 @@ RUN apt-get update > /dev/null && apt-get install runit -y > /dev/null
 RUN apt-get update > /dev/null && apt-get install libssl-dev openssl -y > /dev/null
 RUN apt-get update > /dev/null && apt-get install openjdk-8-jdk -y > /dev/null
 
-ADD https://downloads.apache.org/kafka/3.7.0/kafka_2.13-3.7.0.tgz .
-RUN tar xzf kafka_2.13-3.7.0.tgz && rm kafka_2.13-3.7.0.tgz
+ADD https://downloads.apache.org/kafka/4.1.0/kafka_2.13-4.1.0.tgz .
+RUN tar xzf kafka_2.13-4.1.0.tgz && rm kafka_2.13-4.1.0.tgz
 
 RUN mkdir -p /etc/service/zookeeper/
 RUN mkdir -p /etc/service/kafka/
@@ -13,13 +13,13 @@ RUN mkdir -p /etc/service/kafka/
 COPY serverssl.properties .
 COPY prepStartup.sh .
 
-RUN /bin/bash -c "echo -e '#!/bin/bash\nexec /kafka_2.13-3.7.0/bin/zookeeper-server-start.sh /kafka_2.13-3.7.0/config/zookeeper.properties \n' > /etc/service/zookeeper/run"
-RUN /bin/bash -c "echo -e '#!/bin/bash\n/prepStartup.sh\nexec /kafka_2.13-3.7.0/bin/kafka-server-start.sh /kafka_2.13-3.7.0/config/serverssl.properties \n' > /etc/service/kafka/run"
+RUN /bin/bash -c "echo -e '#!/bin/bash\nexec /kafka_2.13-4.1.0/bin/zookeeper-server-start.sh /kafka_2.13-4.1.0/config/zookeeper.properties \n' > /etc/service/zookeeper/run"
+RUN /bin/bash -c "echo -e '#!/bin/bash\n/prepStartup.sh\nexec /kafka_2.13-4.1.0/bin/kafka-server-start.sh /kafka_2.13-4.1.0/config/serverssl.properties \n' > /etc/service/kafka/run"
 
 RUN chmod +x /etc/service/zookeeper/run
 RUN chmod +x /etc/service/kafka/run
 
-ENV KAFKA_HOME=/kafka_2.13-3.7.0
+ENV KAFKA_HOME=/kafka_2.13-4.1.0
 ENV PASSWORD=password
 ENV DOMAIN=test.kafka.top
 
