@@ -1,6 +1,6 @@
 #!/bin/bash
 # Ensure all environment variables are properly configured.
-: "${KAFKA_HOME=/kafka_2.13-3.7.0}"
+: "${KAFKA_HOME=/kafka_2.13-3.9.1}"
 : "${KEY_STORE=$KAFKA_HOME/ssl/server.keystore.jks}"
 : "${DOMAIN=test.kafka.top}"
 : "${PASSWORD=password}"
