@@ -18,13 +18,20 @@ if [[ ! -f ${KEY_STORE} ]]; then
     mkdir -p ${KAFKA_HOME}/ssl/
     cd ${KAFKA_HOME}/ssl/ || exitWithError "KAFKA_HOME/ssl directory does not exist"
 
+    # 生成JKS格式的keystore
     keytool -keystore server.keystore.jks -alias $DOMAIN -validity 3650 -genkey -keyalg RSA -dname "CN=$DOMAIN, OU=orgunit, O=OpenResty, L=FuJian, S=Xiamen, C=CN" -ext SAN=DNS:$DOMAIN -keypass $PASSWORD -storepass $PASSWORD && \
     openssl req -new -x509 -keyout ca-key -out ca-cert -days 3650 -passout pass:"$PASSWORD" -subj "/CN=$DOMAIN" && \
     keytool -keystore server.keystore.jks -alias CARoot -import -file ca-cert -storepass $PASSWORD -noprompt && \
     keytool -keystore server.keystore.jks -alias $DOMAIN -certreq -file cert-file -storepass $PASSWORD && \
     openssl x509 -req -CA ca-cert -CAkey ca-key -in cert-file -out cert-signed -days 3650 -CAcreateserial -passin pass:$PASSWORD && \
     keytool -keystore server.keystore.jks -alias $DOMAIN -import -file cert-signed -storepass $PASSWORD
-    echo "generated keystore file is ${KEY_STORE}"
+
+    # 将JKS格式转换为PKCS12格式
+    keytool -importkeystore -srckeystore server.keystore.jks -destkeystore server.keystore.p12 -srcstoretype JKS -deststoretype PKCS12 -srcstorepass $PASSWORD -deststorepass $PASSWORD
+
+    echo "Generated JKS keystore file: ${KAFKA_HOME}/ssl/server.keystore.jks"
+    echo "Generated PKCS12 keystore file: ${KAFKA_HOME}/ssl/server.keystore.p12"
+
     cd /
 fi
 

@@ -85,7 +85,7 @@ docker run --init -d -p 9093:9093 -p 9094:9094 --name=kafkassl kafka-ssl-local
 Access the generated key store file by using command:
 
 ```shell
-docker cp kafkassl:/kafka_2.13-3.7.0/ssl/server.keystore.jks keystore.jks
+docker cp kafkassl:/kafka_2.13-3.9.1/ssl/server.keystore.jks keystore.jks
 keytool -importkeystore -srckeystore keystore.jks -destkeystore kafka.p12 -srcstoretype jks -deststoretype pkcs12
 openssl pkcs12 -nodes -in kafka.p12 -out kafka.pem
 ```
@@ -97,8 +97,8 @@ openssl pkcs12 -nodes -in kafka.p12 -out kafka.pem
 |:----------:|:-----------------------------------------:|:----------:|:-------------------------------------------------------------------------------------------|
 | PASSWORD   | password                                  | HIGH       | The password that will be used to create keystore file. Must be 8 or more characters.      |
 | DOMAIN     | test.kafka.top                         | HIGH       | Domain name to be used while creating the certificate.                                     |
-| KAFKA_HOME | /kafka_2.13-3.7.0/                        | LOW        | Directory where Kafka is installed inside the container.                                   |
-| KEY_STORE  | /kafka_2.13-3.7.0/ssl/server.keystore.jks | LOW        | Keystore jks file path to be used inside docker container.                                 |
+| KAFKA_HOME | /kafka_2.13-3.9.1/                        | LOW        | Directory where Kafka is installed inside the container.                                   |
+| KEY_STORE  | /kafka_2.13-3.9.1/ssl/server.keystore.jks | LOW        | Keystore jks file path to be used inside docker container.                                 |
 
 
 
